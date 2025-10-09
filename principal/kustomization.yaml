@@ -1,0 +1,133 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+- https://github.com/argoproj/argo-cd/manifests/cluster-install?ref=stable
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
+- roles.yaml
+- ns.yaml
+- app.yaml
+
+patches:
+# remove dumb network policies
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-application-controller-network-policy
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-applicationset-controller-network-policy
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-dex-server-network-policy
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-notifications-controller-network-policy
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-redis-network-policy
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-repo-server-network-policy
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-server-network-policy
+# fix missing secrets permission for principal Role/argocd-notifications-controller
+- patch: |-
+    $patch: delete
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: argocd-notifications-controller
+- patch: |-
+    $patch: delete
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      name: argocd-notifications-controller
+# fix missing secrets permission for principal ClusterRole/argocd-agent-principal
+- target:
+    group: rbac.authorization.k8s.io
+    version: v1
+    kind: ClusterRole
+    name: argocd-agent-principal
+  patch: |-
+    - op: add
+      path: /rules/-
+      value:
+        apiGroups: ["argoproj.io"]
+        resources: ["applications", "applications/status"]
+        verbs: ["get", "list", "watch"]
+## fix missing secrets permission for principal ClusterRole/argocd-server
+#- target:
+#    group: rbac.authorization.k8s.io
+#    version: v1
+#    kind: ClusterRole
+#    name: argocd-server
+#  patch: |-
+#    apiVersion: rbac.authorization.k8s.io/v1
+#    kind: ClusterRole
+#    metadata:
+#      name: argocd-server
+#    rules:
+#      - apiGroups: ["*"]
+#        resources: ["*"]
+#        verbs: ["*"]
+#      - apiGroups: ["argoproj.io"]
+#        resources: ["*"]
+#        verbs: ["*"]
+# expose UI
+- target:
+     group: ""
+     version: v1
+     kind: Service
+     name: argocd-server
+  patch: |-
+    - op: add
+      path: /spec/type
+      value: LoadBalancer
+- target:
+    group: ""
+    version: v1
+    kind: Secret
+    name: argocd-secret
+  patch: |-
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-secret
+      namespace: argocd
+    data:
+      admin.password: "JDJhJDEwJGhTcGh0c1RJcDBjaWFzSlpZTmFMVWVpamNVMUE3c1JnUzFyMGZ0U2NzSlYzcDdvVWZaeDdpCg=="
+      server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
+# Update the Argo CD server configuration to enable apps-in-any-namespace:
+configMapGenerator:
+- name: argocd-cmd-params-cm
+  behavior: merge
+  literals:
+  - application.namespaces=*
+- name: argocd-cm
+  behavior: merge
+  literals:
+  - kustomize.buildOptions=--enable-helm

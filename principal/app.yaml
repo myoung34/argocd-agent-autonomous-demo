@@ -1,0 +1,27 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  project: default
+  source:
+    repoURL: https://github.com/myoung34/argocd-agent-autonomous-demo
+    targetRevision: HEAD
+    path: principal
+  syncPolicy:
+    syncOptions:
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - ServerSideApply=true
+    - FailOnSharedResource=true
+    - RespectIgnoreDifferences=true
+    - SkipDryRunOnMissingResource=true
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
