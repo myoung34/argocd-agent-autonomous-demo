@@ -1,5 +1,7 @@
 ## README
 
+![](argo.png)
+
 * Im using DO k8s, but any two clusters that can talk to each other will work
   * I use two contexts: `do-atl1-k8s-1-33-1-principal` and `do-atl1-k8s-1-33-1-cluster-1` (the workload)
 * `cd principal && kustomize build | kubectl apply -f - --context do-atl1-k8s-1-33-1-principal`
