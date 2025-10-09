@@ -2,65 +2,35 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: argocd
 
+helmCharts:
+- name: argo-cd
+  releaseName: argocd
+  namespace: argocd
+  version: 8.5.8
+  includeCRDs: true
+  repo: https://argoproj.github.io/argo-helm
+  valuesInline:
+    # disable dex
+    dex:
+      enabled: false
+    # disable server
+    server:
+      replicas: 0
+    # disable notifications controller
+    notifications:
+      enabled: false
+    configs:
+      cm:
+        kustomize.buildOptions: "--enable-helm"
+      secret:
+        extra:
+          server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
+
 resources:
-- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/argo-cd/agent-autonomous?ref=v0.4.1
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.4.1
 - ns.yaml
 - app.yaml
 
-patches:
-# remove dumb network policies
-- patch: |-
-    $patch: delete
-    apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: argocd-redis-network-policy
-- patch: |-
-    $patch: delete
-    apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: argocd-repo-server-network-policy
-- patch: |-
-    $patch: delete
-    apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: argocd-application-controller-network-policy
-- patch: |-
-    $patch: delete
-    apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: argocd-applicationset-controller-network-policy
-# patch perms on clusterrole/argocd-agent-agent
-- target:
-    group: rbac.authorization.k8s.io
-    version: v1
-    kind: ClusterRole
-    name: argocd-agent-agent
-  patch: |-
-    - op: add
-      path: /rules/-
-      value:
-        apiGroups: ["*"]
-        resources: ["*"]
-        verbs: ["*"]
-# add secretkey
-- target:
-    group: ""
-    version: v1
-    kind: Secret
-    name: argocd-secret
-  patch: |-
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: argocd-secret
-      namespace: argocd
-    data:
-      server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
 # Update the agent configuration to connect to your principal using mTLS authentication:
 configMapGenerator:
 - name: argocd-agent-params
@@ -69,7 +39,3 @@ configMapGenerator:
   - agent.server.port=443
   - agent.mode=autonomous
   - agent.creds=mtls:any
-- name: argocd-cm
-  behavior: merge
-  literals:
-  - kustomize.buildOptions=--enable-helm
