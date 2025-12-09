@@ -6,6 +6,7 @@ resources:
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
 - ns.yaml
 - app.yaml
+- principal-certs.yaml
 
 helmCharts:
 - name: argo-cd
@@ -27,6 +28,7 @@ helmCharts:
         argocdServerAdminPassword: "$2a$10$rbH6NowmeCKkkXg.hMAcAeTDG3.YUYqzlGBDrHbRJTK.xSkZ.rxQG"
         extra:
           server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
+
 patches:
 - target:
     kind: Secret
