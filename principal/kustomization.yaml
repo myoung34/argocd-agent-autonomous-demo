@@ -2,6 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: argocd
 
+resources:
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
+- ns.yaml
+- app.yaml
+
 helmCharts:
 - name: argo-cd
   releaseName: argocd
@@ -22,8 +27,22 @@ helmCharts:
         argocdServerAdminPassword: "$2a$10$rbH6NowmeCKkkXg.hMAcAeTDG3.YUYqzlGBDrHbRJTK.xSkZ.rxQG"
         extra:
           server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
-
-resources:
-- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
-- ns.yaml
-- app.yaml
+patches:
+- target:
+    kind: Secret
+    name: argocd-agent-principal-userpass
+  patch: |
+    $patch: delete
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-agent-principal-userpass
+- target:
+    kind: Secret
+    name: argocd-notifications-secret
+  patch: |
+    $patch: delete
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-notifications-secret
