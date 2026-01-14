@@ -6,8 +6,8 @@ resources:
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.5.3
 - ns.yaml
 - app.yaml
-#- argocd-agent-ca.yaml
-#- argocd-agent-client-tls.yaml
+- argocd-agent-ca.yaml
+- argocd-agent-client-tls.yaml
 
 helmCharts:
 - name: argo-cd
