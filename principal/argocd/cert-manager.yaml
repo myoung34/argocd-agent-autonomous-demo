@@ -39,4 +39,5 @@ spec:
     organizationalUnits:
       - test
   dnsNames:
+  - argocd-agent-resource-proxy
   - argocd-agent-resource-proxy.argocd.svc.cluster.local
