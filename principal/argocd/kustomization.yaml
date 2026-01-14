@@ -3,10 +3,10 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.5.3
 - ns.yaml
 - app.yaml
-- principal-certs.yaml
+- cert-manager.yaml
 
 helmCharts:
 - name: argo-cd

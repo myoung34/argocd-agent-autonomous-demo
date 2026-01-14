@@ -29,7 +29,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: agents
+  name: cert-manager
   namespace: argocd
 spec:
   destination:
@@ -39,7 +39,7 @@ spec:
   source:
     repoURL: https://github.com/myoung34/argocd-agent-autonomous-demo
     targetRevision: HEAD
-    path: principal/agents
+    path: principal/cert-manager
   syncPolicy:
     syncOptions:
     - PrunePropagationPolicy=foreground
