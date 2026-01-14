@@ -1,6 +1,6 @@
 #!/bin/bash
 principal_context="do-atl1-k8s-1-34-1-do-2-atl1-principal"
-worker_context="do-atl1-do-atl1-k8s-1-33-1-cluster-1"
+worker_context="do-atl1-k8s-1-34-1-do-2-atl1-cluster-1"
 principal_cname="principal.markyoung.us"
 namespace="argocd"
 agent_name="cluster-1"
