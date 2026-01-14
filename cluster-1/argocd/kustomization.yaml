@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.5.3
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.4.1
 - ns.yaml
 - app.yaml
 - argocd-agent-ca.yaml
