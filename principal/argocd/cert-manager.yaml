@@ -4,7 +4,8 @@ metadata:
   name: argocd-agent-ca
   namespace: argocd
 spec:
-  selfSigned: {}
+  ca:
+    secretName: argocd-agent-ca
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
