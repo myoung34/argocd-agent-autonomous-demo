@@ -1,0 +1,27 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: argocd
+releaseName: argocd
+name: argo-cd
+namespace: argocd
+version: 8.5.8
+repo: https://argoproj.github.io/argo-helm
+valuesInline:
+  crds:
+    install: false # the main install of argo includes this
+  # disable dex
+  dex:
+    enabled: false
+  # disable server
+  server:
+    replicas: 0
+  # disable notifications controller
+  notifications:
+    enabled: false
+  configs:
+    cm:
+      kustomize.buildOptions: "--enable-helm"
+    secret:
+      extra:
+        server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"

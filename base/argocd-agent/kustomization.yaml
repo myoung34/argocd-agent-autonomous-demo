@@ -3,35 +3,13 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.4.1
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.5.3
 - ns.yaml
 - app.yaml
 - argocd-agent-ca.yaml
-- argocd-agent-client-tls.yaml
 
-helmCharts:
-- name: argo-cd
-  releaseName: argocd
-  namespace: argocd
-  version: 8.5.8
-  includeCRDs: true
-  repo: https://argoproj.github.io/argo-helm
-  valuesInline:
-    # disable dex
-    dex:
-      enabled: false
-    # disable server
-    server:
-      replicas: 0
-    # disable notifications controller
-    notifications:
-      enabled: false
-    configs:
-      cm:
-        kustomize.buildOptions: "--enable-helm"
-      secret:
-        extra:
-          server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
+generators:
+- helm.yaml
 
 # Update the agent configuration to connect to your principal using mTLS authentication:
 configMapGenerator:

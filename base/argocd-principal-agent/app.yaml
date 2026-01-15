@@ -1,0 +1,94 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: argocd
+spec:
+  destinations:
+  - name: "in-cluster"
+    namespace: "*"
+    server: "https://kubernetes.default.svc"
+  sourceNamespaces:
+  - argocd
+  sourceRepos:
+  - "*"
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: common-apps
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      directories:
+      - path: common/all/*
+      repoURL: https://github.com/myoung34/argocd-agent-autonomous-demo
+      revision: HEAD
+  template:
+    metadata:
+      name: '{{ path.basename }}'
+    spec:
+      destination:
+        server: https://kubernetes.default.svc
+      project: default
+      revisionHistoryLimit: 5
+      source:
+        path: common/all/{{ path.basename }}
+        repoURL: https://github.com/myoung34/argocd-agent-autonomous-demo.git
+        targetRevision: HEAD
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - PrunePropagationPolicy=foreground
+        - PruneLast=true
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+        - RespectIgnoreDifferences=true
+        - SkipDryRunOnMissingResource=true
+        - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: 'https://github.com/myoung34/argocd-agent-autonomous-demo'
+      revision: HEAD
+      directories: []
+  template:
+    metadata:
+      name: "{{ path.basename }}"
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/myoung34/argocd-agent-autonomous-demo.git'
+        targetRevision: HEAD
+        path: ""
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        syncOptions:
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+          - ServerSideApply=true
+          - FailOnSharedResource=true
+          - RespectIgnoreDifferences=true
+          - SkipDryRunOnMissingResource=true
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true
+      revisionHistoryLimit: 5

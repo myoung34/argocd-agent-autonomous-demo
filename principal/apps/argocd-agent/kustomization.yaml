@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+- ../../../base/argocd-principal-agent # need to not install CRDs and cant override in base/argocd-agent
+- argocd-agent-client-tls.yaml
+
+patches:
+# tell it where to get its specific apps
+- target:
+    kind: ApplicationSet
+    name: apps
+  patch: |
+    - op: add
+      path: /spec/generators/0/git/directories
+      value:
+        - path: "principal/apps/*"
+- target:
+    kind: ApplicationSet
+    name: apps
+  patch: |
+    - op: replace
+      path: /spec/template/spec/source/path
+      value:
+        "principal/apps/{{ path.basename }}"

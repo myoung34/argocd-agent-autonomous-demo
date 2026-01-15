@@ -1,0 +1,42 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/agent?ref=v0.5.3
+- ns.yaml
+- app.yaml
+- argocd-agent-ca.yaml
+
+generators:
+- helm.yaml
+
+# Update the agent configuration to connect to your principal using mTLS authentication:
+configMapGenerator:
+- name: argocd-agent-params
+  behavior: merge
+  literals:
+  - agent.server.port=443
+  - agent.mode=autonomous
+  - agent.creds=mtls:any
+  - agent.server.address=principal.markyoung.us
+
+patches:
+- target:
+    kind: Secret
+    name: argocd-agent-principal-userpass
+  patch: |
+    $patch: delete
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-agent-principal-userpass
+- target:
+    kind: Secret
+    name: argocd-notifications-secret
+  patch: |
+    $patch: delete
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: argocd-notifications-secret

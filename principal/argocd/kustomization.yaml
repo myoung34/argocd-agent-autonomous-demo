@@ -1,19 +1,18 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: argocd
+namespace: argocd-principal
 
 resources:
 - ns.yaml
 - ca.yaml
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
 - cert-manager.yaml
-#- app.yaml
-- agent-cluster-1.yaml
+- agent-principal.yaml
 
 helmCharts:
 - name: argo-cd
   releaseName: argocd
-  namespace: argocd
+  namespace: argocd-principal
   version: 8.5.8
   includeCRDs: true
   repo: https://argoproj.github.io/argo-helm
@@ -34,6 +33,12 @@ helmCharts:
         argocdServerAdminPassword: "$2a$10$rbH6NowmeCKkkXg.hMAcAeTDG3.YUYqzlGBDrHbRJTK.xSkZ.rxQG"
         extra:
           server.secretkey: "Y2k4eFpYQ09UajBmMFhReGJHT3p2aXliTWMyRm9PQWsK"
+
+configMapGenerator:
+- name: argocd-agent-params
+  behavior: merge
+  literals:
+  - principal.namespace=argocd-principal
 
 patches:
 - target:
