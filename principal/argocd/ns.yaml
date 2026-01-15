@@ -2,6 +2,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: argocd-principal
+  name: argocd
   labels:
-    name: argocd-principal
+    name: argocd

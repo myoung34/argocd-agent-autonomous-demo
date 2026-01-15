@@ -4,10 +4,12 @@ metadata:
   name: argocd
 releaseName: argocd
 name: argo-cd
-namespace: argocd
+namespace: argocd-agent
 version: 8.5.8
 repo: https://argoproj.github.io/argo-helm
 valuesInline:
+  crds:
+    install: false # the main install of argo includes this
   # disable dex
   dex:
     enabled: false

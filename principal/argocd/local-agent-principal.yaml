@@ -2,14 +2,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: cluster-principal-agent
+  name: cluster-local-agent
   namespace: argocd
 spec:
-  secretName: cluster-principal-agent
+  secretName: cluster-local-agent
   issuerRef:
     name: argocd-agent-ca
     kind: Issuer
-  commonName: principal
+  commonName: local
   subject:
     organizationalUnits:
       - test

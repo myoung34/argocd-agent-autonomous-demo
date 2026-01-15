@@ -1,18 +1,18 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: argocd-principal
+namespace: argocd
 
 resources:
 - ns.yaml
 - ca.yaml
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.5.3
 - cert-manager.yaml
-- agent-principal.yaml
+- local-agent-principal.yaml
 
 helmCharts:
 - name: argo-cd
   releaseName: argocd
-  namespace: argocd-principal
+  namespace: argocd
   version: 8.5.8
   includeCRDs: true
   repo: https://argoproj.github.io/argo-helm
@@ -28,7 +28,8 @@ helmCharts:
       cm:
         kustomize.buildOptions: "--enable-helm"
       params:
-        application.namespaces: "*"
+        application.namespaces: "cluster-*"
+        #applicationsetcontroller.namespaces: ""
       secret:
         argocdServerAdminPassword: "$2a$10$rbH6NowmeCKkkXg.hMAcAeTDG3.YUYqzlGBDrHbRJTK.xSkZ.rxQG"
         extra:
@@ -38,7 +39,7 @@ configMapGenerator:
 - name: argocd-agent-params
   behavior: merge
   literals:
-  - principal.namespace=argocd-principal
+  - principal.allowed-namespaces="cluster-*"
 
 patches:
 - target:
@@ -59,17 +60,3 @@ patches:
     kind: Secret
     metadata:
       name: argocd-notifications-secret
-- target:
-    kind: ClusterRoleBinding
-    name: argocd-agent-principal
-  patch: |-
-    - op: replace
-      path: "/subjects/0/namespace"
-      value: "argocd-principal"
-- target:
-    kind: RoleBinding
-    name: argocd-agent-principal
-  patch: |-
-    - op: replace
-      path: "/subjects/0/namespace"
-      value: "argocd-principal"

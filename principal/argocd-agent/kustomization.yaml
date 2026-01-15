@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd-agent
+
+resources:
+- ../../base/argocd-agent # need to not install CRDs and cant override in base/argocd-agent
+- argocd-agent-client-tls.yaml
+
+patches:
+- target:
+    kind: RoleBinding
+    name: argocd-agent-agent
+  patch: |-
+    - op: replace
+      path: "/subjects/0/namespace"
+      value: "argocd-agent"
+- target:
+    kind: ClusterRoleBinding
+    name: argocd-agent-agent
+  patch: |-
+    - op: replace
+      path: "/subjects/0/namespace"
+      value: "argocd-agent"
+
