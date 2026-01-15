@@ -5,7 +5,7 @@ namespace: argocd-principal
 resources:
 - ns.yaml
 - ca.yaml
-- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
+- https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.5.3
 - cert-manager.yaml
 - agent-principal.yaml
 
@@ -59,3 +59,17 @@ patches:
     kind: Secret
     metadata:
       name: argocd-notifications-secret
+- target:
+    kind: ClusterRoleBinding
+    name: argocd-agent-principal
+  patch: |-
+    - op: replace
+      path: "/subjects/0/namespace"
+      value: "argocd-principal"
+- target:
+    kind: RoleBinding
+    name: argocd-agent-principal
+  patch: |-
+    - op: replace
+      path: "/subjects/0/namespace"
+      value: "argocd-principal"
