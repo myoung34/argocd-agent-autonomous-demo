@@ -7,7 +7,7 @@ resources:
 - ca.yaml
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.4.1
 - cert-manager.yaml
-- app.yaml
+#- app.yaml
 - agent-cluster-1.yaml
 
 helmCharts:
@@ -18,6 +18,10 @@ helmCharts:
   includeCRDs: true
   repo: https://argoproj.github.io/argo-helm
   valuesInline:
+    applicationSet:
+      replicas: 0
+    controller:
+      replicas: 0
     server:
       service:
         type: LoadBalancer
