@@ -46,3 +46,30 @@ spec:
     automated:
       prune: true
       selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook
+  project: default
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps
+    targetRevision: HEAD
+    path: guestbook
+  syncPolicy:
+    syncOptions:
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - ServerSideApply=true
+    - FailOnSharedResource=true
+    - RespectIgnoreDifferences=true
+    - SkipDryRunOnMissingResource=true
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
