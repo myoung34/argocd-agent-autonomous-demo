@@ -5,21 +5,21 @@ namespace: argocd-agent
 resources:
 - ../../base/base-app/
 
-patches:
-- target:
-    kind: ApplicationSet
-    name: apps
-  patch: |
-    - op: replace
-      path: /spec/generators/0/git/directories
-      value:
-        - path: principal/*
-        - path: principal/argocd/*
-          exclude: true
-        - path: principal/argocd-server/*
-          exclude: true
-        - path: principal/cert-manager/*
-          exclude: true
-    - op: replace
-      path: /spec/template/spec/source/path
-      value: "principal/{{ path.basename }}"
+#patches:
+#- target:
+#    kind: ApplicationSet
+#    name: apps
+#  patch: |
+#    - op: replace
+#      path: /spec/generators/0/git/directories
+#      value:
+#        - path: principal/*
+#        - path: principal/argocd/*
+#          exclude: true
+#        - path: principal/argocd-server/*
+#          exclude: true
+#        - path: principal/cert-manager/*
+#          exclude: true
+#    - op: replace
+#      path: /spec/template/spec/source/path
+#      value: "principal/{{ path.basename }}"

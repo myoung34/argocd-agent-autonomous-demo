@@ -7,7 +7,7 @@ resources:
 - ca.yaml
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.5.3
 - cert-manager.yaml
-- local-agent-principal.yaml
+- cluster-local-agent-principal.yaml
 
 helmCharts:
 - name: argo-cd
@@ -27,8 +27,8 @@ helmCharts:
     configs:
       cm:
         kustomize.buildOptions: "--enable-helm"
-      #params:
-      #  #application.namespaces: "cluster-*"
+      params:
+        application.namespaces: "cluster-*"
       #  #applicationsetcontroller.namespaces: ""
       secret:
         argocdServerAdminPassword: "$2a$10$rbH6NowmeCKkkXg.hMAcAeTDG3.YUYqzlGBDrHbRJTK.xSkZ.rxQG"
