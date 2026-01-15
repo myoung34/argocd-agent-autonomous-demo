@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: default
-  namespace: argocd-principal
+  namespace: argocd
 spec:
   destinations:
   - name: "in-cluster"
@@ -24,7 +24,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: common-apps
-  namespace: argocd-principal
+  namespace: argocd
 spec:
   generators:
   - git:
@@ -61,7 +61,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: apps
-  namespace: argocd-principal
+  namespace: argocd
 spec:
   generators:
   - git:
