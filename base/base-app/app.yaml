@@ -43,6 +43,7 @@ spec:
         repoURL: https://github.com/myoung34/argocd-agent-autonomous-demo.git
         targetRevision: HEAD
       syncPolicy:
+        preserveResourcesOnDeletion: true
         automated:
           prune: true
           selfHeal: true
@@ -77,6 +78,7 @@ spec:
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:
+        preserveResourcesOnDeletion: true
         syncOptions:
           - PrunePropagationPolicy=foreground
           - PruneLast=true
