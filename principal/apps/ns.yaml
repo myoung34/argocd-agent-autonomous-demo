@@ -1,7 +1,0 @@
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: cluster-local
-  labels:
-    name: cluster-local

@@ -27,9 +27,9 @@ helmCharts:
     configs:
       cm:
         kustomize.buildOptions: "--enable-helm"
-      params:
-        application.namespaces: "cluster-*"
-        #applicationsetcontroller.namespaces: ""
+      #params:
+      #  #application.namespaces: "cluster-*"
+      #  #applicationsetcontroller.namespaces: ""
       secret:
         argocdServerAdminPassword: "$2a$10$rbH6NowmeCKkkXg.hMAcAeTDG3.YUYqzlGBDrHbRJTK.xSkZ.rxQG"
         extra:

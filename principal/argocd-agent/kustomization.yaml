@@ -21,4 +21,18 @@ patches:
     - op: replace
       path: "/subjects/0/namespace"
       value: "argocd-agent"
+- target:
+    kind: RoleBinding
+    name: argocd-server
+  patch: |-
+    - op: replace
+      path: "/subjects/0/namespace"
+      value: "argocd"
+- target:
+    kind: ClusterRoleBinding
+    name: argocd-server
+  patch: |-
+    - op: replace
+      path: "/subjects/0/namespace"
+      value: "argocd"
 
