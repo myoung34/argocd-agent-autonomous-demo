@@ -11,7 +11,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/myoung34/argocd-agent-autonomous-demo
-    targetRevision: HEAD
+    targetRevision: testing
     path: principal
   syncPolicy:
     syncOptions:
