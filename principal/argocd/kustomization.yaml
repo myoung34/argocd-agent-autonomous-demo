@@ -8,6 +8,8 @@ resources:
 - https://github.com/argoproj-labs/argocd-agent/install/kubernetes/principal?ref=v0.5.3
 - cert-manager.yaml
 - cluster-local-agent-principal.yaml
+- cluster-cluster-1-agent-principal.yaml
+- cluster-cluster-2-agent-principal.yaml
 
 helmCharts:
 - name: argo-cd

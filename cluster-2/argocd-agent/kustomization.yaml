@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: argocd-agent
 
 resources:
-- ../../base/argocd-agent-no-crds # need to not install CRDs and cant override in base/argocd-agent
+- ../../base/argocd-agent
 - argocd-agent-client-tls.yaml
 
 patches:

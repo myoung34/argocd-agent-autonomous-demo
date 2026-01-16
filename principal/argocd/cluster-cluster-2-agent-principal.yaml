@@ -1,0 +1,17 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-cluster-2-agent
+  namespace: argocd
+spec:
+  secretName: cluster-cluster-2-agent
+  issuerRef:
+    name: argocd-agent-ca
+    kind: Issuer
+  commonName: cluster-2
+  subject:
+    organizationalUnits:
+      - test
+  dnsNames:
+  - cluster.markyoung.us
