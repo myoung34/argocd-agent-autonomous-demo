@@ -14,6 +14,8 @@ patches:
       path: /spec/generators/0/git/directories
       value:
         - path: cluster-1/*
+        - path: cluster-1/argocd*
+          exclude: true
     - op: replace
       path: /spec/template/spec/source/path
       value: "cluster-1/{{ path.basename }}"
