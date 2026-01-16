@@ -19,7 +19,7 @@ configMapGenerator:
   - agent.mode=autonomous
   - agent.creds=mtls:any
   - agent.server.address=principal.markyoung.us
-  #- agent.namespace=argocd-agent
+  - agent.namespace=argocd-agent
 
 patches:
 - target:

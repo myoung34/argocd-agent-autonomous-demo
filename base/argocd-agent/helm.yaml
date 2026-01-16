@@ -20,8 +20,8 @@ valuesInline:
   notifications:
     enabled: false
   configs:
-    params:
-      application.namespaces: "cluster-*"
+    #params:
+    #  application.namespaces: "cluster-*"
     cm:
       kustomize.buildOptions: "--enable-helm"
     secret:
